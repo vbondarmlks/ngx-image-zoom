@@ -1,4 +1,15 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    Renderer2,
+    ViewChild
+} from "@angular/core";
 
 export interface Coord {
     x: number;
@@ -6,17 +17,21 @@ export interface Coord {
 }
 
 @Component({
-    selector: 'ngx-image-zoom',
-    templateUrl: './ngx-image-zoom.component.html',
-    styleUrls: ['./ngx-image-zoom.component.css']
+    selector: "ngx-image-zoom",
+    templateUrl: "./ngx-image-zoom.component.html",
+    styleUrls: ["./ngx-image-zoom.component.css"]
 })
 export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
+    private static readonly validZoomModes: string[] = [
+        "hover",
+        "toggle",
+        "click",
+        "hover-freeze"
+    ];
 
-    private static readonly validZoomModes: string[] = ['hover', 'toggle', 'click', 'hover-freeze'];
-
-    @ViewChild('zoomContainer') zoomContainer: ElementRef;
-    @ViewChild('imageThumbnail') imageThumbnail: ElementRef;
-    @ViewChild('fullSizeImage') fullSizeImage: ElementRef;
+    @ViewChild("zoomContainer") zoomContainer: ElementRef;
+    @ViewChild("imageThumbnail") imageThumbnail: ElementRef;
+    @ViewChild("fullSizeImage") fullSizeImage: ElementRef;
 
     @Output() onZoomScroll = new EventEmitter<number>();
     @Output() onZoomPosition = new EventEmitter<Coord>();
@@ -40,7 +55,7 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
     public lensWidth = 100;
     public lensHeight = 100;
 
-    private zoomMode = 'hover';
+    private zoomMode = "hover";
     private magnification = 1;
     private enableScrollZoom = false;
     private scrollStepSize = 0.1;
@@ -64,104 +79,160 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
     private latestMouseTop: number;
     private scrollParent: Element;
 
-    constructor(private renderer: Renderer2) {
-    }
+    constructor(private renderer: Renderer2) {}
 
-    @Input('thumbImage')
+    @Input("thumbImage")
     public set setThumbImage(thumbImage: string) {
         this.thumbImageLoaded = false;
         this.isReady = false;
         this.thumbImage = thumbImage;
     }
 
-    @Input('fullImage')
+    @Input("fullImage")
     public set setFullImage(fullImage: string) {
         this.fullImageLoaded = false;
         this.isReady = false;
         this.fullImage = fullImage;
     }
 
-    @Input('zoomMode')
+    @Input("zoomMode")
     public set setZoomMode(zoomMode: string) {
         if (NgxImageZoomComponent.validZoomModes.some(m => m === zoomMode)) {
             this.zoomMode = zoomMode;
         }
     }
 
-    @Input('magnification')
+    @Input("magnification")
     public set setMagnification(magnification: number) {
         this.magnification = Number(magnification) || this.magnification;
         this.onZoomScroll.emit(this.magnification);
     }
 
-    @Input('minZoomRatio')
+    @Input("minZoomRatio")
     public set setMinZoomRatio(minZoomRatio: number) {
-        const ratio = Number(minZoomRatio) || this.minZoomRatio || this.baseRatio || 0;
+        const ratio =
+            Number(minZoomRatio) || this.minZoomRatio || this.baseRatio || 0;
         this.minZoomRatio = Math.max(ratio, this.baseRatio || 0);
     }
 
-    @Input('maxZoomRatio')
+    @Input("maxZoomRatio")
     public set setMaxZoomRatio(maxZoomRatio: number) {
         this.maxZoomRatio = Number(maxZoomRatio) || this.maxZoomRatio;
     }
 
-    @Input('scrollStepSize')
+    @Input("scrollStepSize")
     public set setScrollStepSize(stepSize: number) {
         this.scrollStepSize = Number(stepSize) || this.scrollStepSize;
     }
 
-    @Input('enableLens')
+    @Input("enableLens")
     public set setEnableLens(enable: boolean) {
         this.enableLens = Boolean(enable);
     }
 
-    @Input('lensWidth')
+    @Input("lensWidth")
     public set setLensWidth(width: number) {
         this.lensWidth = Number(width) || this.lensWidth;
     }
 
-    @Input('lensHeight')
+    @Input("lensHeight")
     public set setLensHeight(height: number) {
         this.lensHeight = Number(height) || this.lensHeight;
     }
 
-    @Input('circularLens')
+    @Input("circularLens")
     public set setCircularLens(enable: boolean) {
         this.circularLens = Boolean(enable);
     }
 
-    @Input('enableScrollZoom')
+    @Input("enableScrollZoom")
     public set setEnableScrollZoom(enable: boolean) {
         this.enableScrollZoom = Boolean(enable);
     }
 
-    @Input('scrollParentSelector')
+    @Input("scrollParentSelector")
     public set setScrollParentSelector(selector: string) {
         this.scrollParentSelector = selector;
     }
 
     ngOnInit() {
-        if (this.zoomMode === 'hover') {
-            this.renderer.listen(this.zoomContainer.nativeElement, 'mouseenter', (event) => this.hoverMouseEnter(event));
-            this.renderer.listen(this.zoomContainer.nativeElement, 'mouseleave', () => this.hoverMouseLeave());
-            this.renderer.listen(this.zoomContainer.nativeElement, 'mousemove', (event) => this.hoverMouseMove(event));
-        } else if (this.zoomMode === 'toggle') {
-            this.renderer.listen(this.zoomContainer.nativeElement, 'click', (event) => this.toggleClick(event));
-        } else if (this.zoomMode === 'click') {
-            this.renderer.listen(this.zoomContainer.nativeElement, 'click', (event) => this.clickStarter(event));
-            this.renderer.listen(this.zoomContainer.nativeElement, 'mouseleave', () => this.clickMouseLeave());
-            this.renderer.listen(this.zoomContainer.nativeElement, 'mousemove', (event) => this.clickMouseMove(event));
-        } else if (this.zoomMode === 'hover-freeze') {
-            this.renderer.listen(this.zoomContainer.nativeElement, 'mouseenter', (event) => this.hoverFreezeMouseEnter(event));
-            this.renderer.listen(this.zoomContainer.nativeElement, 'mouseleave', () => this.hoverFreezeMouseLeave());
-            this.renderer.listen(this.zoomContainer.nativeElement, 'mousemove', (event) => this.hoverFreezeMouseMove(event));
-            this.renderer.listen(this.zoomContainer.nativeElement, 'click', (event) => this.hoverFreezeClick(event));
+        if (this.zoomMode === "hover") {
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "mouseenter",
+                event => this.hoverMouseEnter(event)
+            );
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "mouseleave",
+                () => this.hoverMouseLeave()
+            );
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "mousemove",
+                event => this.hoverMouseMove(event)
+            );
+        } else if (this.zoomMode === "toggle") {
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "click",
+                event => this.toggleClick(event)
+            );
+        } else if (this.zoomMode === "click") {
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "click",
+                event => this.clickStarter(event)
+            );
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "mouseleave",
+                () => this.clickMouseLeave()
+            );
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "mousemove",
+                event => this.clickMouseMove(event)
+            );
+        } else if (this.zoomMode === "hover-freeze") {
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "mouseenter",
+                event => this.hoverFreezeMouseEnter(event)
+            );
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "mouseleave",
+                () => this.hoverFreezeMouseLeave()
+            );
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "mousemove",
+                event => this.hoverFreezeMouseMove(event)
+            );
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "click",
+                event => this.hoverFreezeClick(event)
+            );
         }
         if (this.enableScrollZoom) {
             // Chrome: 'mousewheel', Firefox: 'DOMMouseScroll', IE: 'onmousewheel'
-            this.renderer.listen(this.zoomContainer.nativeElement, 'mousewheel', (event) => this.onMouseWheel(event));
-            this.renderer.listen(this.zoomContainer.nativeElement, 'DOMMouseScroll', (event) => this.onMouseWheel(event));
-            this.renderer.listen(this.zoomContainer.nativeElement, 'onmousewheel', (event) => this.onMouseWheel(event));
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "mousewheel",
+                event => this.onMouseWheel(event)
+            );
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "DOMMouseScroll",
+                event => this.onMouseWheel(event)
+            );
+            this.renderer.listen(
+                this.zoomContainer.nativeElement,
+                "onmousewheel",
+                event => this.onMouseWheel(event)
+            );
         }
         if (this.enableLens && this.circularLens) {
             this.lensBorderRadius = this.lensWidth / 2;
@@ -219,19 +290,27 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
         this.onZoomPosition.emit(c);
     }
 
-
     /**
      * Mouse wheel event
      */
     private onMouseWheel(event: any) {
         event = window.event || event; // old IE
-        const direction = Math.max(Math.min((event.wheelDelta || -event.detail), 1), -1);
+        const direction = Math.max(
+            Math.min(event.wheelDelta || -event.detail, 1),
+            -1
+        );
         if (direction > 0) {
             // up
-            this.setMagnification = Math.min(this.magnification + this.scrollStepSize, this.maxZoomRatio);
+            this.setMagnification = Math.min(
+                this.magnification + this.scrollStepSize,
+                this.maxZoomRatio
+            );
         } else {
             // down
-            this.setMagnification = Math.max(this.magnification - this.scrollStepSize, this.minZoomRatio);
+            this.setMagnification = Math.max(
+                this.magnification - this.scrollStepSize,
+                this.minZoomRatio
+            );
         }
         this.calculateRatio();
         this.calculateZoomPosition(event);
@@ -331,13 +410,13 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
     private zoomOn(event: MouseEvent) {
         if (this.isReady) {
             this.calculateRatioAndOffset();
-            this.display = 'block';
+            this.display = "block";
             this.calculateZoomPosition(event);
         }
     }
 
     private zoomOff() {
-        this.display = 'none';
+        this.display = "none";
     }
 
     private calculateZoomPosition(event: MouseEvent) {
@@ -348,8 +427,8 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
             scrollTopOffset = this.scrollParent.scrollTop;
         }
 
-        const left = (event.pageX - this.offsetLeft + scrollLeftOffset);
-        const top = (event.pageY - this.offsetTop + scrollTopOffset);
+        const left = event.pageX - this.offsetLeft + scrollLeftOffset;
+        const top = event.pageY - this.offsetTop + scrollTopOffset;
 
         const newLeft = Math.max(Math.min(left, this.thumbWidth), 0);
         const newTop = Math.max(Math.min(top, this.thumbHeight), 0);
@@ -360,15 +439,18 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     private calculateImageAndLensPosition() {
-        let lensLeftMod = 0, lensTopMod = 0;
+        let lensLeftMod = 0,
+            lensTopMod = 0;
 
         if (this.enableLens) {
-            lensLeftMod = this.lensLeft = this.latestMouseLeft - this.lensWidth / 2;
-            lensTopMod = this.lensTop = this.latestMouseTop - this.lensHeight / 2;
+            lensLeftMod = this.lensLeft =
+                this.latestMouseLeft - this.lensWidth / 2;
+            lensTopMod = this.lensTop =
+                this.latestMouseTop - this.lensHeight / 2;
         }
 
-        this.fullImageLeft = (this.latestMouseLeft * -this.xRatio) - lensLeftMod;
-        this.fullImageTop = (this.latestMouseTop * -this.yRatio) - lensTopMod;
+        this.fullImageLeft = this.latestMouseLeft * -this.xRatio - lensLeftMod;
+        this.fullImageTop = this.latestMouseTop * -this.yRatio - lensTopMod;
     }
 
     private calculateRatioAndOffset() {
@@ -387,12 +469,14 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
         this.offsetTop = this.zoomContainer.nativeElement.offsetTop;
         this.offsetLeft = this.zoomContainer.nativeElement.offsetLeft;
         // If we have an offsetParent, we need to add its offset too and recurse until we can't find more offsetParents.
-        let parentContainer = this.zoomContainer.nativeElement.offsetParent;
-        while (parentContainer != null) {
-            this.offsetTop += parentContainer.offsetTop;
-            this.offsetLeft += parentContainer.offsetLeft;
-            parentContainer = parentContainer.offsetParent;
-        }
+
+        // Commented because of absolute positioning
+        // let parentContainer = this.zoomContainer.nativeElement.offsetParent;
+        // while (parentContainer != null) {
+        //     this.offsetTop += parentContainer.offsetTop;
+        //     this.offsetLeft += parentContainer.offsetLeft;
+        //     parentContainer = parentContainer.offsetParent;
+        // }
 
         if (this.fullImage === undefined) {
             this.fullImage = this.thumbImage;
@@ -403,21 +487,26 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
             this.fullHeight = this.fullSizeImage.nativeElement.naturalHeight;
 
             this.baseRatio = Math.max(
-                (this.thumbWidth / this.fullWidth),
-                (this.thumbHeight / this.fullHeight));
+                this.thumbWidth / this.fullWidth,
+                this.thumbHeight / this.fullHeight
+            );
 
             // Don't allow zooming to smaller than thumbnail size
-            this.minZoomRatio = Math.max(this.minZoomRatio || 0, this.baseRatio || 0);
+            this.minZoomRatio = Math.max(
+                this.minZoomRatio || 0,
+                this.baseRatio || 0
+            );
 
             this.calculateRatio();
         }
     }
 
     private calculateRatio() {
-        this.magnifiedWidth = (this.fullWidth * this.magnification);
-        this.magnifiedHeight = (this.fullHeight * this.magnification);
+        this.magnifiedWidth = this.fullWidth * this.magnification;
+        this.magnifiedHeight = this.fullHeight * this.magnification;
 
         this.xRatio = (this.magnifiedWidth - this.thumbWidth) / this.thumbWidth;
-        this.yRatio = (this.magnifiedHeight - this.thumbHeight) / this.thumbHeight;
+        this.yRatio =
+            (this.magnifiedHeight - this.thumbHeight) / this.thumbHeight;
     }
 }
