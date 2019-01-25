@@ -619,7 +619,8 @@ var NgxImageZoomComponent = (function () {
     NgxImageZoomComponent.decorators = [
         { type: Component, args: [{
                     selector: "ngx-image-zoom",
-                    templateUrl: "./ngx-image-zoom.component.html",
+                    // tslint:disable-next-line
+                    template: '<div #zoomContainer class="ngxImageZoomContainer" [style.width.px]="this.thumbWidth"> <img #imageThumbnail class="ngxImageZoomThumbnail" [src]="thumbImage" width="100%" height="100%" (load)="onThumbImageLoaded()"/> <div [ngClass]="{\'ngxImageZoomFullContainer\': true, \'ngxImageZoomLensEnabled\': this.enableLens}" [style.display]="this.display" [style.top.px]="this.lensTop" [style.left.px]="this.lensLeft" [style.width.px]="this.lensWidth" [style.height.px]="this.lensHeight" [style.border-radius.px]="this.lensBorderRadius" > <img #fullSizeImage class="ngxImageZoomFull" [src]="fullImage" (load)="onFullImageLoaded()" [style.display]="this.display" [style.top.px]="this.fullImageTop" [style.left.px]="this.fullImageLeft" [style.width.px]="this.magnifiedWidth" [style.height.px]="this.magnifiedHeight" /> </div> </div> ',
                     styles: [".ngxImageZoomContainer { position: relative; margin: auto; overflow: hidden; } .ngxImageZoomFull { position: absolute; max-width: none; max-height: none; display: none; } .ngxImageZoomFullContainer { position: absolute; overflow: hidden; } .ngxImageZoomFullContainer.ngxImageZoomLensEnabled { border: 2px solid red; cursor: crosshair; } "]
                 },] },
     ];
