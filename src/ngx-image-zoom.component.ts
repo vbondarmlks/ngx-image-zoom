@@ -295,6 +295,10 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
      */
     private onMouseWheel(event: any) {
         event = window.event || event; // old IE
+        if (event.target.attributes.class.value == "ngxImageZoomThumbnail") {
+            event.stopPropagation();
+            return;
+        }
         const direction = Math.max(
             Math.min(event.wheelDelta || -event.detail, 1),
             -1
@@ -356,6 +360,8 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.zoomingEnabled === false) {
             this.zoomingEnabled = true;
             this.zoomOn(event);
+        } else {
+            this.clickMouseLeave();
         }
     }
 
@@ -465,12 +471,12 @@ export class NgxImageZoomComponent implements OnInit, OnChanges, AfterViewInit {
             this.lensTop = 0;
         }
 
-        // getBoundingClientRect() ? https://stackoverflow.com/a/44008873
-        this.offsetTop = this.zoomContainer.nativeElement.offsetTop;
-        this.offsetLeft = this.zoomContainer.nativeElement.offsetLeft;
+        var viewportOffset = this.zoomContainer.nativeElement.getBoundingClientRect();
+        this.offsetTop = viewportOffset.top;
+        this.offsetLeft = viewportOffset.left;
         // If we have an offsetParent, we need to add its offset too and recurse until we can't find more offsetParents.
 
-        // Commented because of absolute positioning
+        // Commented because of using getBoundingClientRect
         // let parentContainer = this.zoomContainer.nativeElement.offsetParent;
         // while (parentContainer != null) {
         //     this.offsetTop += parentContainer.offsetTop;
