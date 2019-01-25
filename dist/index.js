@@ -316,6 +316,10 @@ var NgxImageZoomComponent = (function () {
      */
     function (event) {
         event = window.event || event; // old IE
+        if (event.target.attributes.class.value == "ngxImageZoomThumbnail") {
+            event.stopPropagation();
+            return;
+        }
         var /** @type {?} */ direction = Math.max(Math.min(event.wheelDelta || -event.detail, 1), -1);
         if (direction > 0) {
             // up
@@ -399,6 +403,9 @@ var NgxImageZoomComponent = (function () {
         if (this.zoomingEnabled === false) {
             this.zoomingEnabled = true;
             this.zoomOn(event);
+        }
+        else {
+            this.clickMouseLeave();
         }
     };
     /**
@@ -567,11 +574,11 @@ var NgxImageZoomComponent = (function () {
             this.lensLeft = 0;
             this.lensTop = 0;
         }
-        // getBoundingClientRect() ? https://stackoverflow.com/a/44008873
-        this.offsetTop = this.zoomContainer.nativeElement.offsetTop;
-        this.offsetLeft = this.zoomContainer.nativeElement.offsetLeft;
+        var /** @type {?} */ viewportOffset = this.zoomContainer.nativeElement.getBoundingClientRect();
+        this.offsetTop = viewportOffset.top;
+        this.offsetLeft = viewportOffset.left;
         // If we have an offsetParent, we need to add its offset too and recurse until we can't find more offsetParents.
-        // Commented because of absolute positioning
+        // Commented because of using getBoundingClientRect
         // let parentContainer = this.zoomContainer.nativeElement.offsetParent;
         // while (parentContainer != null) {
         //     this.offsetTop += parentContainer.offsetTop;
