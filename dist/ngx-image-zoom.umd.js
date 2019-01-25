@@ -241,10 +241,9 @@
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.ngOnInit
-        /**
+        NgxImageZoomComponent.prototype.ngOnInit = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             var _this = this;
             if (this.zoomMode === "hover") {
                 this.renderer.listen(
@@ -359,10 +358,9 @@
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.ngOnChanges
-        /**
+        NgxImageZoomComponent.prototype.ngOnChanges = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             if (this.enableLens) {
                 if (this.circularLens) {
                     this.lensBorderRadius = this.lensWidth / 2;
@@ -376,10 +374,9 @@
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.ngAfterViewInit
-        /**
+        NgxImageZoomComponent.prototype.ngAfterViewInit = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             this.scrollParent = document.querySelector(
                 this.scrollParentSelector
             );
@@ -391,31 +388,28 @@
          * Template helper methods
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.onThumbImageLoaded
-        /**
+        NgxImageZoomComponent.prototype.onThumbImageLoaded = /**
          * Template helper methods
          * @return {?}
-         */ = function() {
+         */ function() {
             this.thumbImageLoaded = true;
             this.checkImagesLoaded();
         };
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.onFullImageLoaded
-        /**
+        NgxImageZoomComponent.prototype.onFullImageLoaded = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             this.fullImageLoaded = true;
             this.checkImagesLoaded();
         };
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.checkImagesLoaded
-        /**
+        NgxImageZoomComponent.prototype.checkImagesLoaded = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             this.calculateRatioAndOffset();
             if (this.thumbImageLoaded && this.fullImageLoaded) {
                 this.calculateImageAndLensPosition();
@@ -428,13 +422,12 @@
          * @param {?} top
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.setZoomPosition
-        /**
+        NgxImageZoomComponent.prototype.setZoomPosition = /**
          * Zoom position setters
          * @param {?} left
          * @param {?} top
          * @return {?}
-         */ = function(left, top) {
+         */ function(left, top) {
             this.latestMouseLeft = Number(left) || this.latestMouseLeft;
             this.latestMouseTop = Number(top) || this.latestMouseTop;
             var /** @type {?} */ c = {
@@ -448,12 +441,11 @@
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.onMouseWheel
-        /**
+        NgxImageZoomComponent.prototype.onMouseWheel = /**
          * Mouse wheel event
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             event = window.event || event; // old IE
             if (
                 event.target.attributes.class.value == "ngxImageZoomThumbnail"
@@ -491,32 +483,29 @@
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.hoverMouseEnter
-        /**
+        NgxImageZoomComponent.prototype.hoverMouseEnter = /**
          * Hover mode
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             this.zoomOn(event);
         };
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.hoverMouseLeave
-        /**
+        NgxImageZoomComponent.prototype.hoverMouseLeave = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             this.zoomOff();
         };
         /**
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.hoverMouseMove
-        /**
+        NgxImageZoomComponent.prototype.hoverMouseMove = /**
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             this.calculateZoomPosition(event);
         };
         /**
@@ -524,12 +513,11 @@
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.toggleClick
-        /**
+        NgxImageZoomComponent.prototype.toggleClick = /**
          * Toggle mode
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             if (this.zoomingEnabled) {
                 this.zoomOff();
             } else {
@@ -542,12 +530,11 @@
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.clickStarter
-        /**
+        NgxImageZoomComponent.prototype.clickStarter = /**
          * Click mode
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             if (this.zoomingEnabled === false) {
                 this.zoomingEnabled = true;
                 this.zoomOn(event);
@@ -558,10 +545,9 @@
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.clickMouseLeave
-        /**
+        NgxImageZoomComponent.prototype.clickMouseLeave = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             this.zoomOff();
             this.zoomingEnabled = false;
         };
@@ -569,11 +555,10 @@
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.clickMouseMove
-        /**
+        NgxImageZoomComponent.prototype.clickMouseMove = /**
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             if (this.zoomingEnabled) {
                 this.calculateZoomPosition(event);
             }
@@ -583,12 +568,11 @@
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.hoverFreezeMouseEnter
-        /**
+        NgxImageZoomComponent.prototype.hoverFreezeMouseEnter = /**
          * Hover freeze mode
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             if (this.zoomingEnabled && !this.zoomFrozen) {
                 this.zoomOn(event);
             }
@@ -596,10 +580,9 @@
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.hoverFreezeMouseLeave
-        /**
+        NgxImageZoomComponent.prototype.hoverFreezeMouseLeave = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             if (this.zoomingEnabled && !this.zoomFrozen) {
                 this.zoomOff();
             }
@@ -608,11 +591,10 @@
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.hoverFreezeMouseMove
-        /**
+        NgxImageZoomComponent.prototype.hoverFreezeMouseMove = /**
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             if (this.zoomingEnabled && !this.zoomFrozen) {
                 this.calculateZoomPosition(event);
             }
@@ -621,11 +603,10 @@
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.hoverFreezeClick
-        /**
+        NgxImageZoomComponent.prototype.hoverFreezeClick = /**
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             if (this.zoomingEnabled && this.zoomFrozen) {
                 this.zoomingEnabled = false;
                 this.zoomFrozen = false;
@@ -642,12 +623,11 @@
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.zoomOn
-        /**
+        NgxImageZoomComponent.prototype.zoomOn = /**
          * Private helper methods
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             if (this.isReady) {
                 this.calculateRatioAndOffset();
                 this.display = "block";
@@ -657,21 +637,19 @@
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.zoomOff
-        /**
+        NgxImageZoomComponent.prototype.zoomOff = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             this.display = "none";
         };
         /**
          * @param {?} event
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.calculateZoomPosition
-        /**
+        NgxImageZoomComponent.prototype.calculateZoomPosition = /**
          * @param {?} event
          * @return {?}
-         */ = function(event) {
+         */ function(event) {
             var /** @type {?} */ scrollLeftOffset = 0;
             var /** @type {?} */ scrollTopOffset = 0;
             if (this.scrollParent !== null) {
@@ -696,10 +674,9 @@
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.calculateImageAndLensPosition
-        /**
+        NgxImageZoomComponent.prototype.calculateImageAndLensPosition = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             var /** @type {?} */ lensLeftMod = 0 /** @type {?} */,
                 lensTopMod = 0;
             if (this.enableLens) {
@@ -715,10 +692,9 @@
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.calculateRatioAndOffset
-        /**
+        NgxImageZoomComponent.prototype.calculateRatioAndOffset = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             this.thumbWidth = this.imageThumbnail.nativeElement.width;
             this.thumbHeight = this.imageThumbnail.nativeElement.height;
             // If lens is disabled, set lens size to equal thumb size and position it on top of the thumb
@@ -760,10 +736,9 @@
         /**
          * @return {?}
          */
-        NgxImageZoomComponent.prototype.calculateRatio
-        /**
+        NgxImageZoomComponent.prototype.calculateRatio = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             this.magnifiedWidth = this.fullWidth * this.magnification;
             this.magnifiedHeight = this.fullHeight * this.magnification;
             this.xRatio =
@@ -784,7 +759,7 @@
                     {
                         selector: "ngx-image-zoom",
                         template:
-                            '<div #zoomContainer class="ngxImageZoomContainer" [style.width.px]="this.thumbWidth" [style.height.px]="this.thumbHeight"> <img #imageThumbnail class="ngxImageZoomThumbnail" [src]="thumbImage" width="100%" height="100%" (load)="onThumbImageLoaded()"/> <div [ngClass]="{\'ngxImageZoomFullContainer\': true, \'ngxImageZoomLensEnabled\': this.enableLens}" [style.display]="this.display" [style.top.px]="this.lensTop" [style.left.px]="this.lensLeft" [style.width.px]="this.lensWidth" [style.height.px]="this.lensHeight" [style.border-radius.px]="this.lensBorderRadius" > <img #fullSizeImage class="ngxImageZoomFull" [src]="fullImage" (load)="onFullImageLoaded()" [style.display]="this.display" [style.top.px]="this.fullImageTop" [style.left.px]="this.fullImageLeft" [style.width.px]="this.magnifiedWidth" [style.height.px]="this.magnifiedHeight" /> </div> </div> ',
+                            '<div #zoomContainer class="ngxImageZoomContainer" [style.width.px]="this.thumbWidth"> <img #imageThumbnail class="ngxImageZoomThumbnail" [src]="thumbImage" width="100%" height="100%" (load)="onThumbImageLoaded()"/> <div [ngClass]="{\'ngxImageZoomFullContainer\': true, \'ngxImageZoomLensEnabled\': this.enableLens}" [style.display]="this.display" [style.top.px]="this.lensTop" [style.left.px]="this.lensLeft" [style.width.px]="this.lensWidth" [style.height.px]="this.lensHeight" [style.border-radius.px]="this.lensBorderRadius" > <img #fullSizeImage class="ngxImageZoomFull" [src]="fullImage" (load)="onFullImageLoaded()" [style.display]="this.display" [style.top.px]="this.fullImageTop" [style.left.px]="this.fullImageLeft" [style.width.px]="this.magnifiedWidth" [style.height.px]="this.magnifiedHeight" /> </div> </div> ',
                         styles: [
                             ".ngxImageZoomContainer { position: relative; margin: auto; overflow: hidden; } .ngxImageZoomFull { position: absolute; max-width: none; max-height: none; display: none; } .ngxImageZoomFullContainer { position: absolute; overflow: hidden; } .ngxImageZoomFullContainer.ngxImageZoomLensEnabled { border: 2px solid red; cursor: crosshair; } "
                         ]
@@ -834,10 +809,9 @@
         /**
          * @return {?}
          */
-        NgxImageZoomModule.forRoot
-        /**
+        NgxImageZoomModule.forRoot = /**
          * @return {?}
-         */ = function() {
+         */ function() {
             return {
                 ngModule: NgxImageZoomModule
             };
